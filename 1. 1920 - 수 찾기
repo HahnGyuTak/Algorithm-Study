@@ -1,0 +1,62 @@
+[문제 바로가기](https://www.acmicpc.net/problem/1920)
+```C
+#define _CRT_SECURE_NO_WARNINGS // merge Sort
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#define MAX_INT 100000
+
+long long int tmp[MAX_INT/2];
+
+void merge_sort(long long int* a, int start, int end)
+{
+	if(start>=end) return;
+	int mid = (start + end) / 2;
+	merge_sort(a,start,mid);
+	merge_sort(a,mid + 1,end);
+	
+	int i,t=0, left = start,j=0;
+	
+	for(i=start;i<=mid;i++) tmp[t++] = a[i];
+
+	while(i <= end && j < t)
+		a[left++] = a[i] > tmp[j] ? tmp[j++] : a[i++];
+	
+	while(j < t) a[left++] = tmp[j++];
+}
+
+int binary_search(long long int *x, int left, int right, long long int k)
+{
+	if(x[left] == k || x[right] == k) return 1;
+	if(left >= right) return 0;
+	
+	int mid = (left + right) / 2;
+	int flag = 0;
+	
+	if(x[mid] > k) flag = binary_search(x, left, mid - 1, k);
+	else if(x[mid] < k) flag = binary_search(x, mid + 1, right, k);
+	else flag = 1;
+	
+	return flag;
+}
+
+void YoN(long long int *n, int N, long long int *m, int M)
+{
+	merge_sort(n,0,N-1);
+	for(int i=0;i<M;i++)
+	{
+		if(m[i] < n[0] || m[i] > n[N-1]) printf("0\n");
+		else printf("%d\n",binary_search(n,0,N-1,m[i]));
+	}
+}
+
+int main() {
+	int N,M;
+	long long int n[MAX_INT],m[MAX_INT];
+	scanf("%d",&N);
+	for(int i=0;i<N;i++) scanf("%lld",&n[i]);
+	scanf("%d",&M);
+	for(int i=0;i<M;i++) scanf("%lld",&m[i]);
+	YoN(n,N,m,M);
+}
+```
