@@ -1,4 +1,28 @@
 [문제 바로가기](https://www.acmicpc.net/problem/10816)
 ```C
+#include <stdio.h>
+
+int N, M, n[20000001] = {0}, m[500000];
+
+int main()
+{
+    int tmp;
+    
+    scanf("%d", &N);
+    for (int i = 0; i < N; i++)
+    {
+        scanf("%d", &tmp);
+        n[tmp + 10000000]++;
+    }
+    scanf("%d", &M);
+    for (int i = 0; i < M; i++)
+    {
+        scanf("%d", m + i);
+    }
+    for (int i = 0; i < M; i++)
+        printf("%d ", n[m[i] + 10000000]);
+    
+}
+
 
 ```
