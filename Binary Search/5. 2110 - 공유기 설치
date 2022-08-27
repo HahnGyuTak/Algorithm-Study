@@ -1,3 +1,90 @@
 [문제 바로가기](https://www.acmicpc.net/problem/2110)
 
-'''C
+```C
+#include <stdio.h>
+
+long long house[200000];
+
+void swap(long long *a, long long *b)
+{
+    long long tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+
+void state_heap(int n)
+{
+    for (int i = 1; i < n; i++)
+    {
+        int child = i;
+        do
+        {
+            int parent = (child - 1) / 2;
+            if (house[child] > house[parent])
+                swap(house + child, house + parent);
+            child = parent;
+        }while (child != 0);
+    }
+}
+
+void heapsort(int n)
+{
+    state_heap(n);
+    for (int i = n - 1; i >= 0 ; i--)
+    {
+        swap(house, house + i);
+        int parent = 0;
+        int child = 0;
+        do
+        {
+            child = parent * 2 + 1;
+            if (child < i - 1 && house[child] < house[child + 1])
+                child++;
+            if (child < i && house[child] > house[parent])
+                swap(house + child, house + parent);
+            parent = child;
+        }while(child < i);
+    }
+}
+
+int max_distance(int n, int c)
+{
+    int low = 1;
+    int high = house[n - 1];
+    int result = 0;
+    
+    while (low <= high)
+    {
+        int mid = (low + high) / 2;
+        int install_house = house[0];
+        int cnt = 1;
+        
+        for (int i = 0; i < n; i++)
+            if (house[i] - install_house >= mid)
+            {
+                install_house = house[i];
+                cnt++;
+            }
+        if (cnt >= c)
+        {
+            if (mid > result) result = mid;
+            low = mid + 1;
+        }
+        else
+            high = mid - 1;
+    }
+    return (result);
+}
+
+int main()
+{
+    int N, C;
+    
+    scanf("%d %d", &N, &C);
+    for (int i = 0; i < N; i++)
+        scanf("%lld", house + i);
+    heapsort(N);
+    printf("%d\n", max_distance(N, C));
+    return 0;
+}
+```
